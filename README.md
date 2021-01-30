@@ -5,11 +5,12 @@
 
 # rTRNG: R package providing access and examples to TRNG C++ library
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rTRNG)](https://cran.r-project.org/package=rTRNG)
-[![Travis-CI Build
-Status](https://travis-ci.org/miraisolutions/rTRNG.svg?branch=master)](https://travis-ci.org/miraisolutions/rTRNG)
-[![Coverage
-Status](https://img.shields.io/codecov/c/github/miraisolutions/rTRNG/master.svg)](https://codecov.io/github/miraisolutions/rTRNG?branch=master)
+[![CRAN
+status](http://www.r-pkg.org/badges/version/rTRNG)](https://cran.r-project.org/package=rTRNG)
+[![R-CMD-check](https://github.com/miraisolutions/rTRNG/workflows/R-CMD-check/badge.svg)](https://github.com/miraisolutions/rTRNG/actions?query=workflow%3AR-CMD-check)
+[![valgrind](https://github.com/miraisolutions/rTRNG/workflows/valgrind/badge.svg)](https://github.com/miraisolutions/rTRNG/actions?query=workflow%3Avalgrind)
+[![Codecov
+coverage](https://codecov.io/gh/miraisolutions/rTRNG/branch/master/graph/badge.svg)](https://codecov.io/gh/miraisolutions/rTRNG?branch=master)
 
 **[TRNG](https://numbercrunch.de/trng/)** (Tina’s Random Number
 Generator) is a state-of-the-art C++ pseudo-random number generator
@@ -21,23 +22,23 @@ to `jump` ahead by an arbitrary number of steps and to `split` a
 sequence into any desired sub-sequence(s), thus enabling techniques such
 as *block-splitting* and *leapfrogging* suitable to parallel algorithms.
 
-Package **rTRNG** provides the R users with access to the functionality
-of the underlying TRNG C++ library, both in R and as part of other
-projects combining R with C++.
+Package **rTRNG** provides the R user with access to the functionality
+of the underlying TRNG C++ library, both in R directly or more typically
+as part of other projects combining R with C++.
 
 An [introduction to
 **rTRNG**](https://user2017.sched.com/event/Axpj/rtrng-advanced-parallel-random-number-generation-in-r)
 \[[pdf](http://schd.ws/hosted_files/user2017/93/Mirai.rTRNG.useR2017.pdf)\]
-was presented at the useR\!2017 conference, and is also available as
-package vignette:
+was given at the useR\!2017 conference, and is also available as package
+vignette:
 
 ``` r
 vignette("rTRNG.useR2017", "rTRNG")
 ```
 
-The *sub-matrix simulation* vignette shows **rTRNG** in action for the
-flexible and consistent (parallel) simulation of a matrix of Monte Carlo
-variates:
+The *sub-matrix simulation* vignette shows **rTRNG** in action for a
+flexible *and* consistent (parallel) simulation of a matrix of Monte
+Carlo variates:
 
 ``` r
 vignette("mcMat", "rTRNG")
@@ -47,8 +48,8 @@ A full applied example of using **rTRNG** for the simulation of credit
 defaults was presented at the
 [R/Finance 2017](http://past.rinfinance.com/agenda/2017/talk/RiccardoPorreca.pdf)
 conference. The underlying code and data are hosted on
-[GitHub](https://github.com/miraisolutions/PortfolioRiskMC), as well as
-the corresponding [R Markdown
+[GitHub](https://github.com/miraisolutions/PortfolioRiskMC), as is the
+corresponding [R Markdown
 output](https://rawgit.com/miraisolutions/PortfolioRiskMC/master/RinFinance2017/PortfolioSimAndRiskBig.html).
 
 For more information and references, you can consult the package
@@ -56,19 +57,21 @@ documentation page via `help("rTRNG-package")`.
 
 ## Installation
 
-The package can be installed from our [GitHub
+You can install the package from CRAN:
+
+``` r
+install.packages("rTRNG")
+```
+
+The development version of **rTRNG** can be installed from our [GitHub
 repository](https://github.com/miraisolutions/rTRNG) with:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("miraisolutions/rTRNG")
 # in order to also build the vignettes, you'll have to run below instead
-remotes::install_github("miraisolutions/rTRNG", build_opts = "")
+remotes::install_github("miraisolutions/rTRNG", build_vignettes = TRUE)
 ```
-
-<!--
-NOTE: Argument `build_vignettes` not supported anymore in devtools/remotes (see r-lib/remotes#353). Instead, `build_opts = ""` can be used for a full installation including vignettes.
--->
 
 -----
 
@@ -93,9 +96,9 @@ library(rTRNG)
 TRNGkind("yarn2") 
 TRNGseed(12358)
 runif_trng(15)
-#>  [1] 0.580259813 0.339434026 0.221393682 0.369402388 0.542678773
-#>  [6] 0.002851459 0.123996486 0.346813776 0.121799416 0.947124450
-#> [11] 0.336516569 0.128926181 0.380379891 0.550692382 0.436002654
+#>  [1] 0.58025981 0.33943403 0.22139368 0.36940239 0.54267877
+#>  [6] 0.00285146 0.12399649 0.34681378 0.12179942 0.94712445
+#> [11] 0.33651657 0.12892618 0.38037989 0.55069238 0.43600265
 ```
 
 The special `jump` and `split` operations can be applied to the current
@@ -106,7 +109,7 @@ TRNGseed(12358)
 TRNGjump(6) # advance by 6 the internal state
 TRNGsplit(5, 3) # subsequence: one element every 5 starting from the 3rd
 runif_trng(2)
-#> [1] 0.1217994 0.5506924
+#> [1] 0.121799 0.550692
 #   => compare to the full sequence above
 ```
 
@@ -119,7 +122,7 @@ rng$seed(12358)
 rng$jump(6)
 rng$split(5, 3)
 runif_trng(2, engine = rng)
-#> [1] 0.1217994 0.5506924
+#> [1] 0.121799 0.550692
 ```
 
 In addition, parallel generation of random variates can be enabled in
@@ -139,10 +142,13 @@ identical(x_serial, x_parallel)
 
 The TRNG C++ library is made available by **rTRNG** to standalone C++
 code compiled with `Rcpp::sourceCpp` thanks to the `Rcpp::depends`
-attribute:
+attribute, with `Rcpp::plugins(cpp11)` enforcing the C++11 standard
+required by TRNG \>= 4.22:
 
 ``` cpp
 // [[Rcpp::depends(rTRNG)]]
+// TRNG >= 4.22 requires C++11
+// [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 #include <trng/yarn2.hpp>
 #include <trng/uniform_dist.hpp>
@@ -162,7 +168,7 @@ Rcpp::NumericVector exampleCpp() {
 
 ``` r
 exampleCpp()
-#> [1] 0.1217994 0.5506924
+#> [1] 0.121799 0.550692
 ```
 
 ### Use TRNG from other R packages
@@ -174,9 +180,22 @@ through **rTRNG** is achieved by
     file
   - importing one symbol in the NAMESPACE: `importFrom(rTRNG,
     TRNG.Version)`
+  - enforcing compilation using C++11 in Makevars\[.win\] via `CXX_STD =
+    CXX11`
   - setting the relevant linker flags in Makevars\[.win\] via
     `rTRNG::LdFlags()`
       - Makevars: `PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e
         "rTRNG::LdFlags()")`
       - Makevars.win: `PKG_LIBS += $(shell
         "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "rTRNG::LdFlags()")`
+
+### Note about C++ code on macOS
+
+C++ code using the TRNG library (sourced via `Rcpp::sourceCpp` or part
+of an R package) might fail on certain systems due to issues with
+building and linking against **rTRNG**. This is typically the case for
+**macOS**, and can generally be checked by running
+
+``` r
+rTRNG::check_rTRNG_linking()
+```

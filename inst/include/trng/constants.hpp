@@ -1,22 +1,22 @@
-// Copyright (c) 2000-2018, Heiko Bauke
+// Copyright (c) 2000-2020, Heiko Bauke
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
 // are met:
-// 
+//
 //   * Redistributions of source code must retain the above copyright
-//     notice, this list of conditions and the following disclaimer.  
-// 
+//     notice, this list of conditions and the following disclaimer.
+//
 //   * Redistributions in binary form must reproduce the above
 //     copyright notice, this list of conditions and the following
 //     disclaimer in the documentation and/or other materials provided
-//     with the distribution.  
-// 
+//     with the distribution.
+//
 //   * Neither the name of the copyright holder nor the names of its
 //     contributors may be used to endorse or promote products derived
 //     from this software without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -34,22 +34,17 @@
 
 #define TRNG_CONSTANTS_HPP
 
-#include <trng/cuda.hpp>
-
-#define TRNG_NEW_CONSTANT(type, value, x) \
-    TRNG_CUDA_ENABLE \
-    static type x() throw () { \
-      return value; \
-    }
+#define TRNG_NEW_CONSTANT(type, value, x) static constexpr type x = value
 
 namespace trng {
 
-  namespace math {  
+  namespace math {
 
     template<typename T>
     class constants;
 
-    template<> class constants<float> {
+    template<>
+    class constants<float> {
     public:
       TRNG_NEW_CONSTANT(float, 0.5f, one_half);
       TRNG_NEW_CONSTANT(float, 3.14159265358979323846264f, pi);
@@ -63,9 +58,12 @@ namespace trng {
       TRNG_NEW_CONSTANT(float, .707106781186547524400845f, one_over_sqrt_2);
       TRNG_NEW_CONSTANT(float, .398942280401432677939946f, one_over_sqrt_2pi);
       TRNG_NEW_CONSTANT(float, .797884560802865355879892f, sqrt_2_over_pi);
+      TRNG_NEW_CONSTANT(float, .886226925452758013649085f, sqrt_pi_over_2);
+      TRNG_NEW_CONSTANT(float, 1.77245385090551602729817f, sqrt_pi);
     };
-  
-    template<> class constants<double> {
+
+    template<>
+    class constants<double> {
     public:
       TRNG_NEW_CONSTANT(double, 0.5, one_half);
       TRNG_NEW_CONSTANT(double, 3.14159265358979323846264, pi);
@@ -79,9 +77,12 @@ namespace trng {
       TRNG_NEW_CONSTANT(double, .707106781186547524400845, one_over_sqrt_2);
       TRNG_NEW_CONSTANT(double, .398942280401432677939946, one_over_sqrt_2pi);
       TRNG_NEW_CONSTANT(double, .797884560802865355879892, sqrt_2_over_pi);
+      TRNG_NEW_CONSTANT(double, .886226925452758013649085, sqrt_pi_over_2);
+      TRNG_NEW_CONSTANT(double, 1.77245385090551602729817, sqrt_pi);
     };
-  
-    template<> class constants<long double> {
+
+    template<>
+    class constants<long double> {
     public:
       TRNG_NEW_CONSTANT(long double, 0.5l, one_half);
       TRNG_NEW_CONSTANT(long double, 3.14159265358979323846264l, pi);
@@ -95,11 +96,13 @@ namespace trng {
       TRNG_NEW_CONSTANT(long double, 0.3183098861837906715377676l, one_over_pi);
       TRNG_NEW_CONSTANT(long double, .398942280401432677939946l, one_over_sqrt_2pi);
       TRNG_NEW_CONSTANT(long double, .797884560802865355879892l, sqrt_2_over_pi);
+      TRNG_NEW_CONSTANT(long double, .886226925452758013649085l, sqrt_pi_over_2);
+      TRNG_NEW_CONSTANT(long double, 1.77245385090551602729817l, sqrt_pi);
     };
-    
-  }
 
-}
+  }  // namespace math
+
+}  // namespace trng
 
 #undef TRNG_NEW_CONSTANT
 

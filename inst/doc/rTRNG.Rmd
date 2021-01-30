@@ -12,6 +12,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+linking_ok <- rTRNG::check_rTRNG_linking()
 ```
 
 
@@ -101,9 +102,14 @@ identical(x_serial, x_parallel)
 
 C++ code using the C++ TRNG library and headers shipped with **rTRNG** can
 easily be compiled, specifying the `Rcpp::depends` attribute that allows
-`Rcpp::sourceCpp` to link correctly against the library.
-```{Rcpp sourceCpp}
+`Rcpp::sourceCpp` to link correctly against the library. Moreover,
+`Rcpp::plugins(cpp11)` is needed to enforce the C++11 standard required by TRNG
+>= 4.22.
+
+```{Rcpp sourceCpp, eval=linking_ok}
 // [[Rcpp::depends(rTRNG)]]
+// TRNG >= 4.22 requires C++11
+// [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 #include <trng/yarn2.hpp>
 #include <trng/uniform_dist.hpp>
@@ -127,7 +133,7 @@ NumericVector exampleCpp() {
 exampleCpp()
 */
 ```
-```{r sourceCpp-R, echo=FALSE}
+```{r sourceCpp-R, echo=FALSE, eval=linking_ok}
 exampleCpp()
 ```
 
@@ -139,6 +145,19 @@ Creating an R package with C++ code using the TRNG library and headers through
 
 - adding `Imports: rTRNG` and `LinkingTo: rTRNG` to the DESCRIPTION file
 - importing one symbol in the NAMESPACE: `importFrom(rTRNG, TRNG.Version)`
+- enforcing compilation using C++11 in Makevars[.win] via `CXX_STD = CXX11`
 - setting the relevant linker flags in Makevars[.win] via `rTRNG::LdFlags()`
     - Makevars: `PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "rTRNG::LdFlags()")`
     - Makevars.win: `PKG_LIBS += $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "rTRNG::LdFlags()")`
+
+
+### Note about C++ code on macOS
+
+C++ code using the TRNG library (sourced via `Rcpp::sourceCpp` or part of an R
+package) might fail on certain systems due to issues with building and linking
+against **rTRNG**. This is typically the case for **macOS**, and can generally
+be checked by running
+
+```{r check-linking, eval=FALSE}
+rTRNG::check_rTRNG_linking()
+```

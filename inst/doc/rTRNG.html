@@ -1,28 +1,53 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Riccardo Porreca, Roland Schmid" />
 
-<meta name="date" content="2019-04-27" />
+<meta name="date" content="2021-01-29" />
 
 <title>Introduction to rTRNG</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -32,14 +57,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -48,9 +75,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -96,7 +123,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -104,6 +131,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -117,9 +145,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -288,7 +313,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -303,7 +329,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Introduction to rTRNG</h1>
 <h4 class="author">Riccardo Porreca, Roland Schmid</h4>
-<h4 class="date">2019-04-27</h4>
+<h4 class="date">2021-01-29</h4>
 
 
 
@@ -316,68 +342,70 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="trng.random" class="section level3">
 <h3>TRNG.Random</h3>
 <p>The TRNG.Random functionality (see <code>?TRNG.Random</code>) provides a base-R-like access to TRNG random number engines by setting and manipulating the current engine in use.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(rTRNG)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">TRNGkind</span>(<span class="st">&quot;yarn2&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">TRNGseed</span>(<span class="dv">117</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">TRNGjump</span>(<span class="dv">5</span>) <span class="co"># advance by 5 the internal state</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">TRNGsplit</span>(<span class="dv">3</span>, <span class="dv">2</span>) <span class="co"># subsequence: one element every 3 starting from the 2nd</span></a></code></pre></div>
-<p>Random variates from the current engine are then generated using functions <code>r&lt;dist&gt;_trng</code>, e.g. <code>runif_trng</code> for the uniform distribution.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">x</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">##  [1] 0.9085960 0.8689441 0.3540530 0.7378240 0.0052939 0.5866284 0.6862086</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">##  [8] 0.7088267 0.6622958 0.8182121</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(rTRNG)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">TRNGkind</span>(<span class="st">&quot;yarn2&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">TRNGseed</span>(<span class="dv">117</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">TRNGjump</span>(<span class="dv">5</span>) <span class="co"># advance by 5 the internal state</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">TRNGsplit</span>(<span class="dv">3</span>, <span class="dv">2</span>) <span class="co"># subsequence: one element every 3 starting from the 2nd</span></span></code></pre></div>
+<p>Random variates from the current engine are then generated using functions <code>r&lt;dist&gt;_trng</code>, e.g. <code>runif_trng</code> for the uniform distribution.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>x &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="dv">10</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>x</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">##  [1] 0.9085960 0.8689441 0.3540530 0.7378240 0.0052939 0.5866284 0.6862086</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">##  [8] 0.7088267 0.6622958 0.8182121</span></span></code></pre></div>
 </div>
 <div id="trng.engine" class="section level3">
 <h3>TRNG.Engine</h3>
-<p>Random number engines can be explicitly created and manipulated using reference objects from a number of classes (see <code>?TRNG.Engine</code>), e.g. <code>yarn2</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">rng &lt;-<span class="st"> </span>yarn2<span class="op">$</span><span class="kw">new</span>()</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">rng<span class="op">$</span><span class="kw">seed</span>(<span class="dv">117</span>)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co"># alternative: rng &lt;- yarn2$new(117) </span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">rng<span class="op">$</span><span class="kw">jump</span>(<span class="dv">5</span>) </a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">rng<span class="op">$</span><span class="kw">split</span>(<span class="dv">3</span>, <span class="dv">2</span>) </a></code></pre></div>
+<p>Random number engines can be explicitly created and manipulated using reference objects from a number of classes (see <code>?TRNG.Engine</code>), e.g. <code>yarn2</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>rng &lt;-<span class="st"> </span>yarn2<span class="op">$</span><span class="kw">new</span>()</span>
+<span id="cb3-2"><a href="#cb3-2"></a>rng<span class="op">$</span><span class="kw">seed</span>(<span class="dv">117</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co"># alternative: rng &lt;- yarn2$new(117) </span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>rng<span class="op">$</span><span class="kw">jump</span>(<span class="dv">5</span>) </span>
+<span id="cb3-5"><a href="#cb3-5"></a>rng<span class="op">$</span><span class="kw">split</span>(<span class="dv">3</span>, <span class="dv">2</span>) </span></code></pre></div>
 <p>The engine object is then passed as <code>engine</code> argument of any <code>r&lt;dist&gt;_trng</code> function.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="dv">10</span>, <span class="dt">engine =</span> rng)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">x</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">##  [1] 0.9085960 0.8689441 0.3540530 0.7378240 0.0052939 0.5866284 0.6862086</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">##  [8] 0.7088267 0.6622958 0.8182121</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>x &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="dv">10</span>, <span class="dt">engine =</span> rng)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>x</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">##  [1] 0.9085960 0.8689441 0.3540530 0.7378240 0.0052939 0.5866284 0.6862086</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">##  [8] 0.7088267 0.6622958 0.8182121</span></span></code></pre></div>
 </div>
 <div id="parallel-generation" class="section level3">
 <h3>Parallel generation</h3>
 <p>The parallel nature of TRNG random number engines allows <em>fair-playing</em> multi-threaded generation of random variates, with guaranteed equivalence to a purely-sequential generation. Parallel generation is available in <code>r&lt;dist&gt;_trng</code> with argument <code>parallelGrain &gt; 0</code> and relies on <code>RcppParallel</code>, where the number of parallel threads is controlled via <code>RcppParallel::setThreadOptions</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">TRNGseed</span>(<span class="dv">117</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">RcppParallel<span class="op">::</span><span class="kw">setThreadOptions</span>(<span class="dt">numThreads =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">x_parallel &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="fl">1e5</span>, <span class="dt">parallelGrain =</span> <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">TRNGseed</span>(<span class="dv">117</span>)</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">x_serial &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="fl">1e5</span>)</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="kw">identical</span>(x_serial, x_parallel)</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">## [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">TRNGseed</span>(<span class="dv">117</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>RcppParallel<span class="op">::</span><span class="kw">setThreadOptions</span>(<span class="dt">numThreads =</span> <span class="dv">2</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>x_parallel &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="fl">1e5</span>, <span class="dt">parallelGrain =</span> <span class="dv">100</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="kw">TRNGseed</span>(<span class="dv">117</span>)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>x_serial &lt;-<span class="st"> </span><span class="kw">runif_trng</span>(<span class="fl">1e5</span>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="kw">identical</span>(x_serial, x_parallel)</span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">## [1] TRUE</span></span></code></pre></div>
 </div>
 <div id="standalone-c" class="section level3">
 <h3>Standalone C++</h3>
-<p>C++ code using the C++ TRNG library and headers shipped with <strong>rTRNG</strong> can easily be compiled, specifying the <code>Rcpp::depends</code> attribute that allows <code>Rcpp::sourceCpp</code> to link correctly against the library.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">// [[Rcpp::depends(rTRNG)]]</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="pp">#include </span><span class="im">&lt;trng/yarn2.hpp&gt;</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="pp">#include </span><span class="im">&lt;trng/uniform_dist.hpp&gt;</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="kw">using</span> <span class="kw">namespace</span> trng;</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">// [[Rcpp::export]]</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">NumericVector exampleCpp() {</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">  yarn2 rng;</a>
-<a class="sourceLine" id="cb6-10" data-line-number="10">  rng.seed(<span class="dv">117</span>);</a>
-<a class="sourceLine" id="cb6-11" data-line-number="11">  <span class="co">// alternative: yarn2 rng(117); </span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12">  rng.jump(<span class="dv">5</span>);</a>
-<a class="sourceLine" id="cb6-13" data-line-number="13">  rng.split(<span class="dv">3</span>, <span class="dv">1</span>); <span class="co">// note the C++ 0-based index for the subsequence</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14">  NumericVector x(<span class="dv">10</span>);</a>
-<a class="sourceLine" id="cb6-15" data-line-number="15">  uniform_dist&lt;&gt; unif(<span class="dv">0</span>, <span class="dv">1</span>);</a>
-<a class="sourceLine" id="cb6-16" data-line-number="16">  <span class="cf">for</span> (<span class="dt">unsigned</span> <span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">10</span>; i++) {</a>
-<a class="sourceLine" id="cb6-17" data-line-number="17">    x[i] = unif(rng);</a>
-<a class="sourceLine" id="cb6-18" data-line-number="18">  }</a>
-<a class="sourceLine" id="cb6-19" data-line-number="19">  <span class="cf">return</span> x;</a>
-<a class="sourceLine" id="cb6-20" data-line-number="20">}</a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">/*** R</span></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">exampleCpp()</span></a>
-<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">*/</span></a></code></pre></div>
+<p>C++ code using the C++ TRNG library and headers shipped with <strong>rTRNG</strong> can easily be compiled, specifying the <code>Rcpp::depends</code> attribute that allows <code>Rcpp::sourceCpp</code> to link correctly against the library. Moreover, <code>Rcpp::plugins(cpp11)</code> is needed to enforce the C++11 standard required by TRNG &gt;= 4.22.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">// [[Rcpp::depends(rTRNG)]]</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co">// TRNG &gt;= 4.22 requires C++11</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">// [[Rcpp::plugins(cpp11)]]</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="pp">#include </span><span class="im">&lt;trng/yarn2.hpp&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="pp">#include </span><span class="im">&lt;trng/uniform_dist.hpp&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="kw">using</span> <span class="kw">namespace</span> trng;</span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">// [[Rcpp::export]]</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>NumericVector exampleCpp() {</span>
+<span id="cb6-11"><a href="#cb6-11"></a>  yarn2 rng;</span>
+<span id="cb6-12"><a href="#cb6-12"></a>  rng.seed(<span class="dv">117</span>);</span>
+<span id="cb6-13"><a href="#cb6-13"></a>  <span class="co">// alternative: yarn2 rng(117); </span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>  rng.jump(<span class="dv">5</span>);</span>
+<span id="cb6-15"><a href="#cb6-15"></a>  rng.split(<span class="dv">3</span>, <span class="dv">1</span>); <span class="co">// note the C++ 0-based index for the subsequence</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>  NumericVector x(<span class="dv">10</span>);</span>
+<span id="cb6-17"><a href="#cb6-17"></a>  uniform_dist&lt;&gt; unif(<span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb6-18"><a href="#cb6-18"></a>  <span class="cf">for</span> (<span class="dt">unsigned</span> <span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">10</span>; i++) {</span>
+<span id="cb6-19"><a href="#cb6-19"></a>    x[i] = unif(rng);</span>
+<span id="cb6-20"><a href="#cb6-20"></a>  }</span>
+<span id="cb6-21"><a href="#cb6-21"></a>  <span class="cf">return</span> x;</span>
+<span id="cb6-22"><a href="#cb6-22"></a>}</span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co">/*** R</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="co">exampleCpp()</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="co">*/</span></span></code></pre></div>
 <pre><code>##  [1] 0.9085960 0.8689441 0.3540530 0.7378240 0.0052939 0.5866284 0.6862086
 ##  [8] 0.7088267 0.6622958 0.8182121</code></pre>
 </div>
@@ -387,6 +415,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ul>
 <li>adding <code>Imports: rTRNG</code> and <code>LinkingTo: rTRNG</code> to the DESCRIPTION file</li>
 <li>importing one symbol in the NAMESPACE: <code>importFrom(rTRNG, TRNG.Version)</code></li>
+<li>enforcing compilation using C++11 in Makevars[.win] via <code>CXX_STD = CXX11</code></li>
 <li>setting the relevant linker flags in Makevars[.win] via <code>rTRNG::LdFlags()</code>
 <ul>
 <li>Makevars: <code>PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e &quot;rTRNG::LdFlags()&quot;)</code></li>
@@ -394,7 +423,15 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </ul></li>
 </ul>
 </div>
+<div id="note-about-c-code-on-macos" class="section level3">
+<h3>Note about C++ code on macOS</h3>
+<p>C++ code using the TRNG library (sourced via <code>Rcpp::sourceCpp</code> or part of an R package) might fail on certain systems due to issues with building and linking against <strong>rTRNG</strong>. This is typically the case for <strong>macOS</strong>, and can generally be checked by running</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>rTRNG<span class="op">::</span><span class="kw">check_rTRNG_linking</span>()</span></code></pre></div>
+</div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

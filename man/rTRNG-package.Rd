@@ -35,13 +35,25 @@ the underlying TRNG C++ library in different ways and at different levels.
     \item
       Standalone C++ code sourced via \code{\link[Rcpp]{sourceCpp}} can rely
       on the \code{\link[=dependsAttribute]{Rcpp::depends}} attribute to
-      correctly setup building against \pkg{rTRNG}.
-      \preformatted{// [[Rcpp::depends(rTRNG)]]}
+      correctly set up building against \pkg{rTRNG}, with
+      \code{Rcpp::plugins(cpp11)} enforcing the C++11 standard required by
+      TRNG >= 4.22:
+      \preformatted{
+// [[Rcpp::depends(rTRNG)]]
+// [[Rcpp::plugins(cpp11)]]}
     \item
       Creating an \R package with C++ code using the TRNG library is achieved
-      by \code{LinkingTo: rTRNG} in the DESCRIPTION file and by setting the
-      relevant linker flags in Makevars[.win] via
-      \code{\link[rTRNG]{LdFlags}}.
+      by \code{LinkingTo: rTRNG} in the DESCRIPTION file, adding
+      \code{importFrom(rTRNG, TRNG.Version)} in the NAMESPACE file, and
+      setting relevant linker flags (via \code{\link[rTRNG]{LdFlags}}) and
+      C++11 compilation (\code{CXX_STD = CXX11}) in Makevars[.win].
+    \item
+      Note that C++ code using the TRNG library (sourced via
+      \code{Rcpp::sourceCpp} or part of an \R package) might fail on certain
+      systems due to issues with building and linking against \pkg{rTRNG}.
+      This is typically the case for macOS, and can generally be checked
+      using
+      \code{\link[rTRNG]{check_rTRNG_linking}}.
     }
 }
 See the package vignettes (\code{browseVignettes("rTRNG")}) for an overview
@@ -50,11 +62,11 @@ cases.
 }
 \references{
 Heiko Bauke, \emph{Tina's Random Number Generator Library}, Version
-4.20, \url{https://numbercrunch.de/trng/trng.pdf}.
+4.23.1, \url{https://github.com/rabauke/trng4/blob/v4.23.1/doc/trng.pdf}.
 
 Stephan Mertens, \emph{Random Number Generators: A Survival Guide
   for Large Scale Simulations}, 2009,
-  \url{http://adsabs.harvard.edu/abs/2009arXiv0905.4238M}
+  \url{https://ui.adsabs.harvard.edu/abs/2009arXiv0905.4238M}
 }
 \seealso{
 Useful links:
