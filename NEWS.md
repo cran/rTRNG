@@ -1,3 +1,12 @@
+# rTRNG 4.23.1-2
+
+## Patch release
+
+- Fix invalid image height property attribute in the documentation (#25).
+- Fix redirected URLs in documentation (#28).
+- Remove unnecessary `LazyData` in DESCRIPTION (#28).
+- Maintenance of Continuous Integration GitHub Actions workflow (#26, #24).
+
 # rTRNG 4.23.1-1
 
 ## Maintenance release
