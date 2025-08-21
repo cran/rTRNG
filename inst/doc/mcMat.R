@@ -54,7 +54,7 @@ S <- mcSubMatR(rows, cols,
 identical(M[startRow:endRow, subCols],
           S[startRow:endRow, subCols])
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 knitr::kable(cbind.data.frame(M = M, S = S), row.names = TRUE)
 
 ## ----subMatExampleRcpp, eval=linking_ok---------------------------------------
@@ -68,7 +68,7 @@ S <- mcSubMatRcpp(rows, cols, startRow, endRow, subCols)
 identical(M[startRow:endRow, subCols],
           S[startRow:endRow, subCols])
 
-## ---- echo=FALSE, eval=linking_ok---------------------------------------------
+## ----echo=FALSE, eval=linking_ok----------------------------------------------
 knitr::kable(cbind.data.frame(M = M, S = S), row.names = TRUE)
 
 ## ----fullMatExampleRcppParallel, eval=linking_ok------------------------------
@@ -81,6 +81,6 @@ Sp <- mcMatRcppParallel(rows, cols, subCols)
 identical(M[, subCols],
           Sp[, subCols])
 
-## ---- echo=FALSE, eval=linking_ok---------------------------------------------
+## ----echo=FALSE, eval=linking_ok----------------------------------------------
 knitr::kable(cbind.data.frame(M = M, Sp = Sp), row.names = TRUE)
 

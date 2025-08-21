@@ -1,3 +1,17 @@
+# rTRNG 4.23.1-4
+
+## Patch release
+
+- Drop C++ 11 specification (#35).
+
+# rTRNG 4.23.1-3
+
+## Patch release (GitHub only)
+
+- Fix missing package anchors in the documentation (#33).
+- Fix obsolete URLs in the README (#34).
+- Maintenance of Continuous Integration GitHub Actions workflow (#29, #30, #31, #32).
+
 # rTRNG 4.23.1-2
 
 ## Patch release

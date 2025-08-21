@@ -36,5 +36,5 @@ identical(x_serial, x_parallel)
 exampleCpp()
 
 ## ----check-linking, eval=FALSE------------------------------------------------
-#  rTRNG::check_rTRNG_linking()
+# rTRNG::check_rTRNG_linking()
 
