@@ -1,6 +1,6 @@
-bf3e1bb4d2c3e30422ea53ef23f3fccb *DESCRIPTION
+831afef15fa80167355ef3972f410316 *DESCRIPTION
 f6cf86bc56b8a86659a07024d188784f *NAMESPACE
-99e6e7fcc21d28058d7621175465a51e *NEWS.md
+f4c9d4f477ea224d80ee15a2df26ef70 *NEWS.md
 a058fed1be1fbbb4f042ae0e2c661118 *R/LdFlags.R
 0672e9922281fe694fe70810d8e87f36 *R/RcppExports.R
 232aa932fead5096a21c9532eff1ab6a *R/TRNG.Engine.R
@@ -21,8 +21,8 @@ ad7d8b89974d703f8cdb3652ca15b59e *R/rnorm_trng.R
 aa42ed5389db56989d349012f9e215eb *R/rpois_trng.R
 071f82850f8e71ed1506905476241ade *R/runif_trng.R
 da8a19c9a4b775bd4f4c30d789086d59 *R/zzz.R
-2a01acc8ed8566ffd6048c8bdfb88d79 *README.md
-1a193108f6ae2409689362069376e842 *build/vignette.rds
+ff1fef659b8d3c4242bd6f271303d7a0 *README.md
+fa0b2603f51c67adf35b92cd021e2a5d *build/vignette.rds
 3382b0080e74a4da795564626899ca85 *inst/COPYRIGHTS
 cb62e5c1a9c8138cb65320e4970b9d8a *inst/WORDLIST
 d2a33574c126bddade030ee15448d5b0 *inst/demos/rTRNGinPkg.R
@@ -31,10 +31,10 @@ d2a33574c126bddade030ee15448d5b0 *inst/demos/rTRNGinPkg.R
 a9e3a287e4e5f008a063eccd63db86cf *inst/demos/skeletonFiles/trng_hello_world.cpp
 ae55277ea3bb848e8830e05d0d8d7aba *inst/doc/mcMat.R
 4df0e4c072b818d6928fb07745c83d0f *inst/doc/mcMat.Rmd
-3e48650f61f6fa70b7ba422b05b2a14e *inst/doc/mcMat.html
+47877f06f4f2dff6f673d3492032292d *inst/doc/mcMat.html
 57010e243a7ea72abbdd0d2ae88ac478 *inst/doc/rTRNG.R
 018edf490d5b720906ef201ba8573c13 *inst/doc/rTRNG.Rmd
-abbefb3e39049f28f0d1d5477fdea3be *inst/doc/rTRNG.html
+3364d5cf513cd83af2568754de0cb129 *inst/doc/rTRNG.html
 6c122f21e6ffd725cd6723d5247a7a1a *inst/doc/rTRNG.useR2017.pdf
 fdc5d620043e80c83238130bfb6395c5 *inst/doc/rTRNG.useR2017.pdf.asis
 4f3202005cc13203a5c8b1b50d6f1e14 *inst/include/trng/bernoulli_dist.hpp
@@ -126,8 +126,8 @@ b246465cc830a115c3f418aa9a7d27da *src/Engine.cpp
 47cf5301840375155ac78026dac1c6ad *src/EngineModule.cpp
 1e2246533625e76788d1cdbcc93214e5 *src/Engine_as_wrap.cpp
 c3fd70a7f9e038137d7c1241154bf9a9 *src/Engine_as_wrap.h
-7ee479f01d63a8f13225f363c8237c63 *src/Makevars
-c91c518eaee48535f1fdbc586a6f0043 *src/Makevars.win
+d27172d27d3599481fad96008177841f *src/Makevars
+e33b75ef2bc52958f77e52920ca38154 *src/Makevars.win
 875fe4946a235567774455f8d5c9389f *src/RcppExports.cpp
 f62be29b826268744fbb53c5a543cb98 *src/rdist.cpp
 e85c010482242ad6efa80a6077d2e576 *src/trng/lcg64.cc
